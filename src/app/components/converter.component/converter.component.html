@@ -1,0 +1,33 @@
+<form [formGroup]="form" class="container mt-5">
+    <div class="row">
+        <mat-form-field appearance="outline" class="col-md-4 col-sm-12">
+            <mat-label>Amount</mat-label>
+            <input formControlName="amount" matInput type="number">
+        </mat-form-field>
+        
+        <mat-form-field appearance="outline" class="col-md-4 col-sm-6">
+            <mat-label>From</mat-label>
+            <mat-select formControlName="fromRate">
+                @for (rate of rates; track rate) {
+                    <mat-option [value]="rate">{{rate}}</mat-option>
+                }
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="col-md-4 col-sm-6">
+            <mat-label>To</mat-label>
+            <mat-select formControlName="toRate">
+                @for (rate of rates; track rate) {
+                    <mat-option [value]="rate">{{rate}}</mat-option>
+                }
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <div class="row justify-content-end">
+        <button mat-raised-button color="primary" 
+                                  class="w-auto me-3 mt-3" 
+                                  [disabled]="!form.valid"
+                                  (click)="calcExchangeRate()" >Convert</button>
+    </div>
+</form>
+<div class="result">{{result}}</div>
