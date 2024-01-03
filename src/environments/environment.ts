@@ -1,3 +1,4 @@
 export const environment = {
-    apiUrl: 'http://api.exchangeratesapi.io/v1/latest?access_key=050beeaad0ad5cda72460c6758d5a11e&amp;format=1'
+    apiUrl: 'http://api.exchangeratesapi.io/v1/latest?access_key=e4eb15113bd801180d62d76646fe891e;format=1',
+    maxItemsInCache: 20
 }

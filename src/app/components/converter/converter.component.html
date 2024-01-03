@@ -30,4 +30,9 @@
                                   (click)="calcExchangeRate()" >Convert</button>
     </div>
 </form>
-<div class="result">{{result}}</div>
+
+@if(result) {
+    <div class="result">    
+        {{result.amount | number: '1.2-2'}} {{result.fromRate}} = <b>{{result.result | number: '1.2-2'}}</b> {{result.toRate}}
+    </div>
+}

@@ -2,7 +2,7 @@ import { Injectable, signal } from "@angular/core";
 import { ExchangeRateCP } from "./exchange-rate.client-proxy";
 import { LatestExchangeRatesModel } from "../models/latest-exchange-rates.model";
 import { take } from "rxjs";
-import { ExchangeRateParamsModel } from "../models/exchange-rate-params.model";
+import { ExchangeRateParamsModel } from "../models/exchange-rate-item.model";
 import { HttpErrorResponse } from "@angular/common/http";
 
 @Injectable()

@@ -7,13 +7,16 @@ import { ExchangeRateCP } from '../../services/exchange-rate.client-proxy';
 import { ExchangeRateService } from '../../services/exchange-rate.service';
 import { MatButtonModule } from '@angular/material/button';
 import { ReactiveFormsModule } from '@angular/forms';
-import { ExchangeRateParamsModel } from '../../models/exchange-rate-params.model';
+import { ExchangeRateParamsModel } from '../../models/exchange-rate-item.model';
 import {
   MatDialog,
   MatDialogTitle,
   MatDialogContent,
 } from '@angular/material/dialog';
 import { ErrorMsgComponent } from '../error-msg/error-msg.component';
+import { CacheService } from '../../services/cache.service';
+import { ExchangeRateResultModel } from '../../models/exchange-rate-item.model';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'converter',
@@ -27,7 +30,8 @@ import { ErrorMsgComponent } from '../error-msg/error-msg.component';
     ReactiveFormsModule,
     MatDialogTitle, 
     MatDialogContent,
-    ErrorMsgComponent
+    ErrorMsgComponent,
+    CommonModule
   ],
   providers: [
     ExchangeRateCP,
@@ -41,18 +45,19 @@ export class ConverterComponent implements OnInit {
 
   constructor(private service: ExchangeRateService,
               private fb: FormBuilder,
-              private dialog: MatDialog) { }
+              private dialog: MatDialog,
+              private cacheService: CacheService) { }
 
   rates: string[] = [];
   form!: FormGroup;
-  result: string = "";
+  result!: ExchangeRateResultModel;
 
   ngOnInit(): void {
     this.service.load();
     this.form = this.fb.group({  
       fromRate: new FormControl('', Validators.required),
       toRate: new FormControl('', Validators.required),
-      amount: new FormControl('', [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)])  // Number with optional 2 decimal places
+      amount: new FormControl('', Validators.required)  // Number with optional 2 decimal places
     });
   }
 
@@ -73,7 +78,13 @@ export class ConverterComponent implements OnInit {
   calcExchangeRate() {
     const formValue: ExchangeRateParamsModel = this.form.value;
     const calcResult = this.service.calc(formValue);
-    this.result = `${formValue.amount} ${formValue.fromRate} = ${calcResult} ${formValue.toRate}`
+
+    this.result = {
+      ...formValue,
+      result: calcResult!
+    };
+
+    this.cacheService.enqueue<ExchangeRateResultModel>(this.result);
   }
 
 }
