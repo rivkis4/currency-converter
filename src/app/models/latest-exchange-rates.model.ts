@@ -4,4 +4,5 @@ export class LatestExchangeRatesModel {
     base?: string;
     date?: Date;
     rates?: { [key: string]: number };
+    error?: number;
 }

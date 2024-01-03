@@ -8,6 +8,12 @@ import { ExchangeRateService } from '../../services/exchange-rate.service';
 import { MatButtonModule } from '@angular/material/button';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ExchangeRateParamsModel } from '../../models/exchange-rate-params.model';
+import {
+  MatDialog,
+  MatDialogTitle,
+  MatDialogContent,
+} from '@angular/material/dialog';
+import { ErrorMsgComponent } from '../error-msg/error-msg.component';
 
 @Component({
   selector: 'converter',
@@ -18,7 +24,10 @@ import { ExchangeRateParamsModel } from '../../models/exchange-rate-params.model
     MatSelectModule,
     MatButtonModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatDialogTitle, 
+    MatDialogContent,
+    ErrorMsgComponent
   ],
   providers: [
     ExchangeRateCP,
@@ -31,7 +40,8 @@ import { ExchangeRateParamsModel } from '../../models/exchange-rate-params.model
 export class ConverterComponent implements OnInit {
 
   constructor(private service: ExchangeRateService,
-              private fb: FormBuilder) { }
+              private fb: FormBuilder,
+              private dialog: MatDialog) { }
 
   rates: string[] = [];
   form!: FormGroup;
@@ -47,10 +57,17 @@ export class ConverterComponent implements OnInit {
   }
 
   latestRatesEffect = effect(() => {
+    if (this.service.model()?.error) {
+      this.dialog.open(
+        ErrorMsgComponent,
+        { data: this.service.model()?.error });
+
+    } else { 
       const rates: { [key: string]: number }| undefined = this.service.model()?.rates!;
       if (rates) {
         this.rates = Object.keys(this.service.model()?.rates!);
       }
+    }
   });
 
   calcExchangeRate() {

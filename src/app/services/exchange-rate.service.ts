@@ -1,8 +1,9 @@
-import { Injectable, WritableSignal, signal } from "@angular/core";
+import { Injectable, signal } from "@angular/core";
 import { ExchangeRateCP } from "./exchange-rate.client-proxy";
 import { LatestExchangeRatesModel } from "../models/latest-exchange-rates.model";
 import { take } from "rxjs";
 import { ExchangeRateParamsModel } from "../models/exchange-rate-params.model";
+import { HttpErrorResponse } from "@angular/common/http";
 
 @Injectable()
 export class ExchangeRateService {
@@ -14,6 +15,10 @@ export class ExchangeRateService {
     load() {
         this.cp.getLatestRates$().pipe(take(1)).subscribe(result => {
             this.model.set(result);
+        }, (error: HttpErrorResponse) => {
+            this.model.set({
+                error: error.status
+            });
         });
     }
 
