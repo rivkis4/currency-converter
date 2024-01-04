@@ -17,6 +17,7 @@ import { ErrorMsgComponent } from '../error-msg/error-msg.component';
 import { CacheService } from '../../services/cache.service';
 import { ExchangeRateResultModel } from '../../models/exchange-rate-item.model';
 import { CommonModule } from '@angular/common';
+import { MatToolbarModule } from '@angular/material/toolbar';
 
 @Component({
   selector: 'converter',
@@ -31,7 +32,8 @@ import { CommonModule } from '@angular/common';
     MatDialogTitle, 
     MatDialogContent,
     ErrorMsgComponent,
-    CommonModule
+    CommonModule,
+    MatToolbarModule
   ],
   providers: [
     ExchangeRateCP,

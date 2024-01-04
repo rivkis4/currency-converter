@@ -1,15 +1,6 @@
-@media only screen and (min-width: 600px) {
-    form {
-        border: 7px solid var(--bs-secondary-bg);
-        padding: 30px;
-        border-radius: 20px;       
-    }
-}
-
-@media only screen and (max-width: 576px) {
-    form {
-        padding: 0 20px;       
-    }
+form {
+    border-bottom: 1px solid var(--bs-gray-200);
+    padding-bottom: 20px;      
 }
 
 .result {
