@@ -1,6 +1,24 @@
+mat-toolbar {
+    position: fixed;
+    top: 56px;
+    z-index: 98;
+    box-shadow: 0 3px 5px -1px #0003, 0 6px 10px #00000024, 0 1px 18px #0000001f;
+}
+
+@media (min-width: 600px) {
+    mat-toolbar {
+        padding-top: 8px !important;
+    }
+
+    form {
+        padding-top: 185px !important;
+    }
+}
+
 form {
+    padding-top: 140px;
     border-bottom: 1px solid var(--bs-gray-200);
-    padding-bottom: 20px;      
+    padding-bottom: 20px;
 }
 
 .result {

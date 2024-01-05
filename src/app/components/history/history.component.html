@@ -1,17 +1,18 @@
-<mat-toolbar>
+<mat-toolbar class="gap-2">
   <span class="flex-grow-1">History</span>
   <mat-icon (click)="clear()">delete</mat-icon>
+  <button mat-button color="accent" mat-flat-button (click)="navigateHome()">Convert</button>
 </mat-toolbar>
 
 <mat-list>
   @for (item of historyList; track $index) {
-    <mat-list-item>
-      <span matListItemTitle>
-        {{item.amount | number: '1.2-2'}} {{item.fromRate}} = <b>{{item.result | number: '1.2-2'}}</b> {{item.toRate}}
-      </span>
-    </mat-list-item>
+  <mat-list-item>
+    <span matListItemTitle>
+      {{item.amount | number: '1.2-2'}} {{item.fromRate}} = <b>{{item.result | number: '1.2-2'}}</b> {{item.toRate}}
+    </span>
+  </mat-list-item>
   }
   @empty {
-    <div class="mt-3 text-center">No Data Yet</div>
+  <div class="mt-3 text-center">No Data Yet</div>
   }
 </mat-list>

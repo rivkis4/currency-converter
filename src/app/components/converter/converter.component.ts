@@ -18,6 +18,8 @@ import { CacheService } from '../../services/cache.service';
 import { ExchangeRateResultModel } from '../../models/exchange-rate-item.model';
 import { CommonModule } from '@angular/common';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { Router, RouterModule } from '@angular/router';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'converter',
@@ -29,11 +31,13 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     MatButtonModule,
     FormsModule,
     ReactiveFormsModule,
-    MatDialogTitle, 
+    MatDialogTitle,
     MatDialogContent,
     ErrorMsgComponent,
     CommonModule,
-    MatToolbarModule
+    MatToolbarModule,
+    RouterModule,
+    MatProgressSpinnerModule
   ],
   providers: [
     ExchangeRateCP,
@@ -46,17 +50,20 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 export class ConverterComponent implements OnInit {
 
   constructor(private service: ExchangeRateService,
-              private fb: FormBuilder,
-              private dialog: MatDialog,
-              private cacheService: CacheService) { }
+    private fb: FormBuilder,
+    private dialog: MatDialog,
+    private cacheService: CacheService,
+    private router: Router) { }
 
   rates: string[] = [];
   form!: FormGroup;
   result!: ExchangeRateResultModel;
+  isLoading: boolean = false;
 
   ngOnInit(): void {
+    this.isLoading = true;
     this.service.load();
-    this.form = this.fb.group({  
+    this.form = this.fb.group({
       fromRate: new FormControl('', Validators.required),
       toRate: new FormControl('', Validators.required),
       amount: new FormControl('', Validators.required)  // Number with optional 2 decimal places
@@ -69,12 +76,13 @@ export class ConverterComponent implements OnInit {
         ErrorMsgComponent,
         { data: this.service.model()?.error });
 
-    } else { 
-      const rates: { [key: string]: number }| undefined = this.service.model()?.rates!;
+    } else {
+      const rates: { [key: string]: number } | undefined = this.service.model()?.rates!;
       if (rates) {
         this.rates = Object.keys(this.service.model()?.rates!);
       }
     }
+    this.isLoading = false;
   });
 
   calcExchangeRate() {
@@ -87,6 +95,10 @@ export class ConverterComponent implements OnInit {
     };
 
     this.cacheService.enqueue<ExchangeRateResultModel>(this.result);
+  }
+
+  navigateHistory() {
+    this.router.navigate(['/history']);
   }
 
 }

@@ -3,15 +3,14 @@ import { CommonModule } from '@angular/common';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { Router, RouterModule } from '@angular/router';
-import { environment } from '../environments/environment.development';
+import { RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [
-    CommonModule, 
+    CommonModule,
     RouterModule,
     MatToolbarModule,
     MatIconModule,
@@ -25,17 +24,9 @@ import { HttpClientModule } from '@angular/common/http';
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
-  
+
   title = 'currency-converter';
 
-  constructor(private router: Router) { console.log(environment.apiUrl) }
-
-  navigateHistory() {
-    this.router.navigate(['/history']);
-  }
-
-  navigateHome() {
-    this.router.navigate(['/']);
-  }
+  constructor() { }
 
 }

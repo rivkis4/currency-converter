@@ -6,6 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatListModule } from '@angular/material/list';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-history',
@@ -15,15 +16,17 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     MatButtonModule,
     MatIconModule,
     MatListModule,
-    MatToolbarModule
+    MatToolbarModule,
+    RouterModule
   ],
   templateUrl: './history.component.html',
   styleUrl: './history.component.scss'
 })
 export class HistoryComponent implements OnInit {
 
-  constructor(private cacheService: CacheService) { }
-  
+  constructor(private cacheService: CacheService,
+    private router: Router) { }
+
   historyList: ExchangeRateResultModel[] = [];
 
   ngOnInit(): void {
@@ -39,4 +42,9 @@ export class HistoryComponent implements OnInit {
     this.cacheService.clearQueue();
     this.load();
   }
+
+  navigateHome() {
+    this.router.navigate(['/']);
+  }
+
 }
