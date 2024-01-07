@@ -5,20 +5,19 @@ import { environment } from "../../environments/environment.development";
 @Injectable({
     providedIn: 'root'
 })
-export class CacheService
-{
+export class CacheService {
     private cacheKey = 'ExchangeRateQueue';
 
     enqueue<T>(item: T): void {
         const queue = this.getQueue<T>();
         queue.push(item);
         this.saveQueue(queue);
-    
+
         if (queue.length > environment.maxItemsInCache) {
             this.dequeue<T>();
         }
     }
-    
+
     dequeue<T>(): T | undefined {
         const queue = this.getQueue();
         const item = queue.shift() as T;
@@ -27,8 +26,8 @@ export class CacheService
     }
 
     getQueue<T>(): T[] {
-    const storedQueue = localStorage.getItem(this.cacheKey);
-    return storedQueue ? JSON.parse(storedQueue) : [];
+        const storedQueue = localStorage.getItem(this.cacheKey);
+        return storedQueue ? JSON.parse(storedQueue) : [];
     }
 
     saveQueue<T>(queue: T[]): void {

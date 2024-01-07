@@ -3,7 +3,6 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormBuilder, FormControl, FormGroup, FormsModule, Validators } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
-import { ExchangeRateCP } from '../../services/exchange-rate.client-proxy';
 import { ExchangeRateService } from '../../services/exchange-rate.service';
 import { MatButtonModule } from '@angular/material/button';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -14,12 +13,13 @@ import {
   MatDialogContent,
 } from '@angular/material/dialog';
 import { ErrorMsgComponent } from '../error-msg/error-msg.component';
-import { CacheService } from '../../services/cache.service';
 import { ExchangeRateResultModel } from '../../models/exchange-rate-item.model';
 import { CommonModule } from '@angular/common';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { Router, RouterModule } from '@angular/router';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { take } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'converter',
@@ -37,11 +37,9 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     CommonModule,
     MatToolbarModule,
     RouterModule,
-    MatProgressSpinnerModule
+    MatProgressBarModule
   ],
   providers: [
-    ExchangeRateCP,
-    ExchangeRateService,
     FormBuilder
   ],
   templateUrl: './converter.component.html',
@@ -52,17 +50,43 @@ export class ConverterComponent implements OnInit {
   constructor(private service: ExchangeRateService,
     private fb: FormBuilder,
     private dialog: MatDialog,
-    private cacheService: CacheService,
     private router: Router) { }
 
-  rates: string[] = [];
+  symbols!: { [key: string]: string }[] | undefined;
   form!: FormGroup;
   result!: ExchangeRateResultModel;
   isLoading: boolean = false;
 
   ngOnInit(): void {
-    this.isLoading = true;
-    this.service.load();
+    if (this.service.symbols?.symbols) {
+      this.symbols = this.service.symbols.symbols;
+
+    } else {
+      this.isLoading = true;
+
+      this.service.loadSymbols$().pipe(take(1)).subscribe({
+        next: result => {
+          this.isLoading = false;
+
+          if (result.success == true && result.symbols) {
+            this.symbols = result.symbols;
+
+          } else {
+            this.dialog.open(
+              ErrorMsgComponent);
+          }
+        },
+
+        error: (error: HttpErrorResponse) => {
+          this.isLoading = false;
+
+          this.dialog.open(
+            ErrorMsgComponent,
+            { data: error.status });
+        }
+      });
+    }
+
     this.form = this.fb.group({
       fromRate: new FormControl('', Validators.required),
       toRate: new FormControl('', Validators.required),
@@ -70,31 +94,32 @@ export class ConverterComponent implements OnInit {
     });
   }
 
-  latestRatesEffect = effect(() => {
-    if (this.service.model()?.error) {
-      this.dialog.open(
-        ErrorMsgComponent,
-        { data: this.service.model()?.error });
-
-    } else {
-      const rates: { [key: string]: number } | undefined = this.service.model()?.rates!;
-      if (rates) {
-        this.rates = Object.keys(this.service.model()?.rates!);
-      }
-    }
-    this.isLoading = false;
-  });
-
   calcExchangeRate() {
+    this.isLoading = true;
+
     const formValue: ExchangeRateParamsModel = this.form.value;
-    const calcResult = this.service.calc(formValue);
+    this.service.calc$(formValue).pipe(take(1)).subscribe({
+      next: resultModel => {
+        this.isLoading = false;
 
-    this.result = {
-      ...formValue,
-      result: calcResult!
-    };
+        if (resultModel) {
+          this.result = resultModel;
 
-    this.cacheService.enqueue<ExchangeRateResultModel>(this.result);
+        } else {
+          this.dialog.open(
+            ErrorMsgComponent);
+        }
+
+      },
+
+      error: ((error: HttpErrorResponse) => {
+        this.isLoading = false;
+
+        this.dialog.open(
+          ErrorMsgComponent,
+          { data: error.status });
+      })
+    });
   }
 
   navigateHistory() {

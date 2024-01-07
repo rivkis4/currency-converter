@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { CacheService } from '../../services/cache.service';
 import { ExchangeRateResultModel } from '../../models/exchange-rate-item.model';
 import { CommonModule } from '@angular/common';
@@ -20,7 +20,8 @@ import { Router, RouterModule } from '@angular/router';
     RouterModule
   ],
   templateUrl: './history.component.html',
-  styleUrl: './history.component.scss'
+  styleUrl: './history.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HistoryComponent implements OnInit {
 

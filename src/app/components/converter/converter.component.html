@@ -2,6 +2,11 @@
     <span class="flex-grow-1">Convert</span>
     <button mat-button color="accent" mat-flat-button (click)="navigateHistory()">About</button>
 </mat-toolbar>
+
+@if (isLoading) {
+<mat-progress-bar mode="indeterminate"></mat-progress-bar>
+}
+
 <form [formGroup]="form" class="container">
     <div class="row">
         <mat-form-field appearance="outline" class="col-md-4 col-sm-12">
@@ -12,8 +17,8 @@
         <mat-form-field appearance="outline" class="col-md-4 col-sm-6">
             <mat-label>From</mat-label>
             <mat-select formControlName="fromRate">
-                @for (rate of rates; track rate) {
-                <mat-option [value]="rate">{{rate}}</mat-option>
+                @for (symbol of symbols | keyvalue; track symbol.key) {
+                <mat-option [value]="symbol.key"><b>{{symbol.key}}</b> - {{symbol.value}}</mat-option>
                 }
             </mat-select>
         </mat-form-field>
@@ -21,8 +26,8 @@
         <mat-form-field appearance="outline" class="col-md-4 col-sm-6">
             <mat-label>To</mat-label>
             <mat-select formControlName="toRate">
-                @for (rate of rates; track rate) {
-                <mat-option [value]="rate">{{rate}}</mat-option>
+                @for (symbol of symbols | keyvalue; track symbol.key) {
+                <mat-option [value]="symbol.key"><b>{{symbol.key}}</b> - {{symbol.value}}</mat-option>
                 }
             </mat-select>
         </mat-form-field>
@@ -39,5 +44,3 @@
     {{result.toRate}}
 </div>
 }
-
-<mat-spinner *ngIf="isLoading"></mat-spinner>

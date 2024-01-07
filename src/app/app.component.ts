@@ -5,6 +5,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
+import { ExchangeRateService } from './services/exchange-rate.service';
+import { ExchangeRateCP } from './services/exchange-rate.client-proxy';
 
 @Component({
   selector: 'app-root',
@@ -18,7 +20,9 @@ import { HttpClientModule } from '@angular/common/http';
     HttpClientModule
   ],
   providers: [
-    HttpClientModule
+    HttpClientModule,
+    ExchangeRateService,
+    ExchangeRateCP
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
