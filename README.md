@@ -1,6 +1,14 @@
-# CurrencyConverter
+# Currency Converter
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.0.8.
+
+## Pre-run requirements
+
+Install Node.js (at least 20.10.0) [Download Node](https://nodejs.org/en/download).
+
+Run `npm install` to install the necessary packages.
+
+Run `npm install -g @angular/cli` to install angular cli (if not exist)
 
 ## Development server
 
