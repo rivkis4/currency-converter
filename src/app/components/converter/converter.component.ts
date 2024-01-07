@@ -1,7 +1,7 @@
 import { Component, OnInit, effect } from '@angular/core';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { FormBuilder, FormControl, FormGroup, FormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, FormsModule, Validators } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { ExchangeRateService } from '../../services/exchange-rate.service';
 import { MatButtonModule } from '@angular/material/button';
@@ -90,7 +90,7 @@ export class ConverterComponent implements OnInit {
     this.form = this.fb.group({
       fromRate: new FormControl('', Validators.required),
       toRate: new FormControl('', Validators.required),
-      amount: new FormControl('', Validators.required)  // Number with optional 2 decimal places
+      amount: new FormControl('', [Validators.required, Validators.min(0.0000001)])
     });
   }
 
@@ -125,5 +125,6 @@ export class ConverterComponent implements OnInit {
   navigateHistory() {
     this.router.navigate(['/history']);
   }
+
 
 }
